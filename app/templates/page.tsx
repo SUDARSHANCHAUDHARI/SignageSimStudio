@@ -6,7 +6,7 @@ export default function TemplatesPage() {
     <main className="min-h-screen bg-gray-950">
       <nav className="border-b border-white/10 px-6 py-4 flex items-center justify-between">
         <Link href="/" className="text-lg font-bold tracking-tight text-white">
-          SignSim<span className="text-indigo-400">Studio</span>
+          SignageSimStudio
         </Link>
         <Link
           href="/simulator"

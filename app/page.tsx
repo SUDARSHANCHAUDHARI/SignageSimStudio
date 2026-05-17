@@ -6,7 +6,7 @@ export default function Home() {
       {/* Nav */}
       <nav className="border-b border-white/10 px-6 py-4 flex items-center justify-between">
         <span className="text-lg font-bold tracking-tight text-white">
-          SignSim<span className="text-indigo-400">Studio</span>
+          SignageSimStudio
         </span>
         <div className="flex items-center gap-6 text-sm text-gray-400">
           <Link href="/templates" className="hover:text-white transition-colors">
@@ -79,7 +79,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-white/10 px-6 py-6 text-center text-xs text-gray-600">
-        SignSim Studio — Phase 1 MVP. Phase 2 will add Three.js 3D environments.
+        SignageSimStudio — Phase 1 MVP. Phase 2 will add Three.js 3D environments.
       </footer>
     </main>
   )

@@ -5,7 +5,7 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'SignSim Studio — Digital Signage Environment Simulator',
+  title: 'SignageSimStudio — Digital Signage Environment Simulator',
   description:
     'Preview your signage in any environment before you deploy. Upload content, pick a room, adjust the display, and get an AI readability review.',
 }

@@ -176,7 +176,7 @@ export default function SimulatorPage() {
         backgroundColor: null,
       })
       const link = document.createElement('a')
-      link.download = `signsim-${template.id}-preview.png`
+      link.download = `signagesimstudio-${template.id}-preview.png`
       link.href = canvas.toDataURL('image/png')
       link.click()
     } catch (err) {
@@ -191,7 +191,7 @@ export default function SimulatorPage() {
       {/* Top bar */}
       <header className="flex-none border-b border-white/10 px-4 py-3 flex items-center justify-between bg-gray-900">
         <Link href="/" className="text-sm font-bold tracking-tight text-white">
-          SignSim<span className="text-indigo-400">Studio</span>
+          SignageSimStudio
         </Link>
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <span

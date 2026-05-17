@@ -1,4 +1,4 @@
-# SignSim Studio
+# SignageSimStudio
 
 A 2D digital signage environment simulator. Upload your content, choose a room template, drag the display into position, adjust viewing distance, and get an AI readability review — all before you deploy a single screen.
 
@@ -29,8 +29,8 @@ A 2D digital signage environment simulator. Upload your content, choose a room t
 ## Setup
 
 ```bash
-git clone https://github.com/SUDARSHANCHAUDHARI/SignSimStudio.git
-cd SignSimStudio
+git clone https://github.com/SUDARSHANCHAUDHARI/SignageSimStudio.git
+cd SignageSimStudio
 pnpm install
 cp .env.example .env.local
 # Add your API key — see Environment Variables below
