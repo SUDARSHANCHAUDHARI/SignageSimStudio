@@ -19,6 +19,9 @@ interface ReviewRequest {
   contentDescription?: string
 }
 
+const MAX_CONTENT_DESCRIPTION_CHARS = 2_000
+const ALLOWED_ORIENTATIONS = new Set(['landscape', 'portrait'])
+
 function defaultResult(): ReviewResult {
   return {
     score: 72,
@@ -46,6 +49,21 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const { templateId, displayWidthPct, viewingDistanceM, orientation, contentDescription } = body
+  if (!templateId || typeof templateId !== 'string') {
+    return NextResponse.json({ error: 'templateId is required' }, { status: 400 })
+  }
+  if (!ALLOWED_ORIENTATIONS.has(orientation)) {
+    return NextResponse.json({ error: 'orientation must be landscape or portrait' }, { status: 400 })
+  }
+  if (typeof displayWidthPct !== 'number' || displayWidthPct < 5 || displayWidthPct > 95) {
+    return NextResponse.json({ error: 'displayWidthPct must be between 5 and 95' }, { status: 400 })
+  }
+  if (typeof viewingDistanceM !== 'number' || viewingDistanceM < 1 || viewingDistanceM > 20) {
+    return NextResponse.json({ error: 'viewingDistanceM must be between 1 and 20' }, { status: 400 })
+  }
+  if (contentDescription && contentDescription.length > MAX_CONTENT_DESCRIPTION_CHARS) {
+    return NextResponse.json({ error: `contentDescription must be ${MAX_CONTENT_DESCRIPTION_CHARS} characters or fewer` }, { status: 413 })
+  }
 
   const hasKey =
     process.env.ANTHROPIC_API_KEY || process.env.OPENAI_API_KEY

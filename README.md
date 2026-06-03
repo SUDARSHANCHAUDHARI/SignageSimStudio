@@ -68,6 +68,19 @@ The app works without any AI key — you get a sample review. Add a key for live
 | Phase 3 | Planned | Multiple display placement, video content support |
 | Phase 4 | Planned | Team workspace, client reports, billing |
 
+## Production Checks
+
+```bash
+pnpm type-check
+pnpm build
+```
+
+## Release Notes
+
+- Do not add Playwright browser smoke tests to this project.
+- Do not commit `.env`, `.env.local`, exported client simulations, or generated screenshots.
+- Keep API keys only in the deployment provider environment.
+
 ## License
 
 MIT
