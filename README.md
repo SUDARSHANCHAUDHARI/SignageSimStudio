@@ -1,72 +1,77 @@
 # SignageSimStudio
 
-A 2D digital signage environment simulator. Upload your content, choose a room template, drag the display into position, adjust viewing distance, and get an AI readability review — all before you deploy a single screen.
+![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=nextdotjs)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript)
+![License](https://img.shields.io/badge/License-MIT-blue)
 
-## What it does
+2D digital signage environment simulator. Upload content, place it inside a room template, adjust viewing conditions, and generate an AI readability review before deployment.
 
-- Upload a content image (menu board, promotional graphic, wayfinding, etc.)
-- Place it on a wall inside one of 10 distinct room environments
-- Adjust display size (32"–86"), orientation (landscape/portrait), and viewing distance (1–10m)
-- Drag the display to any position on the wall
-- Request an AI readability review — returns a 0-100 score, issues, and recommendations
-- Export the simulation as a PNG for client sign-off
+## What It Does
+
+SignageSimStudio helps teams preview how signage content will look in real-world environments. It focuses on readability, display placement, viewing distance, and client sign-off before screens go live.
+
+## Features
+
+- Upload a menu board, promotion, wayfinding graphic, or other signage image.
+- Place content on a wall inside one of 10 room templates.
+- Adjust display size, orientation, and viewing distance.
+- Drag the display position inside the scene.
+- Generate a readability score, issues, and recommendations.
+- Export the simulation as a PNG for review or client approval.
 
 ## Room Templates
 
 | # | Template | Environment |
-|---|----------|-------------|
-| 1 | Retail Store | High-street shop, warm amber tones |
-| 2 | Restaurant Menu Board | Dark kitchen aesthetic |
-| 3 | Office Lobby | Clean corporate reception |
-| 4 | Conference Booth | Dark exhibition hall |
-| 5 | Airport Gate | Terminal slate/blue-grey |
-| 6 | Hospital Waiting Area | Clinical white and green |
-| 7 | School Hallway | Institutional warm yellow |
-| 8 | Gym Reception | Energetic dark with orange accent |
-| 9 | Hotel Lobby | Elegant warm amber |
-| 10 | Outdoor Storefront | Bright exterior daylight |
+|---|---|---|
+| 1 | Retail Store | High-street shop with warm lighting. |
+| 2 | Restaurant Menu Board | Dark menu-board setting. |
+| 3 | Office Lobby | Clean corporate reception. |
+| 4 | Conference Booth | Exhibition booth setting. |
+| 5 | Airport Gate | Terminal-style gate area. |
+| 6 | Hospital Waiting Area | Clinical waiting-room environment. |
+| 7 | School Hallway | Institutional corridor. |
+| 8 | Gym Reception | Fitness reception area. |
+| 9 | Hotel Lobby | Warm hospitality lobby. |
+| 10 | Outdoor Storefront | Bright storefront preview. |
+
+## Tech Stack
+
+- Next.js 15 App Router
+- React 19
+- TypeScript strict mode
+- Tailwind CSS
+- `html2canvas` for PNG export
+- Anthropic SDK and OpenAI SDK
+- No Playwright browser smoke-test dependency
 
 ## Setup
 
 ```bash
-git clone https://github.com/SUDARSHANCHAUDHARI/SignageSimStudio.git
-cd SignageSimStudio
 pnpm install
 cp .env.example .env.local
-# Add your API key — see Environment Variables below
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open `http://localhost:3000`.
 
 ## Environment Variables
 
 ```env
-AI_PROVIDER=claude          # 'claude' or 'openai'
-ANTHROPIC_API_KEY=...       # Required if AI_PROVIDER=claude
-OPENAI_API_KEY=...          # Required if AI_PROVIDER=openai
+AI_PROVIDER=claude
+ANTHROPIC_API_KEY=your_key_here
+OPENAI_API_KEY=your_key_here
 ```
 
-The app works without any AI key — you get a sample review. Add a key for live AI analysis.
+The app works without an AI key by returning a sample review. Add a provider key for live AI analysis.
 
-## Tech Stack
+## Roadmap
 
-- **Next.js 15** (App Router, Turbopack)
-- **React 19**
-- **TypeScript** (strict mode)
-- **Tailwind CSS** — all room environments are CSS-only, no images required
-- **@anthropic-ai/sdk** — Claude Sonnet 4.6 for AI review
-- **openai** — GPT-4o alternative
-- **html2canvas** — PNG export of the simulation canvas
-
-## Phase Roadmap
-
-| Phase | Status | Description |
-|-------|--------|-------------|
-| Phase 1 | Done | 2D simulator, 10 CSS room templates, AI review, PNG export |
-| Phase 2 | Planned | Three.js 3D environments, realistic lighting simulation |
-| Phase 3 | Planned | Multiple display placement, video content support |
-| Phase 4 | Planned | Team workspace, client reports, billing |
+| Phase | Status | Scope |
+|---|---|---|
+| Phase 1 | Ready | 2D simulator, 10 room templates, AI review, PNG export. |
+| Phase 2 | Planned | Three.js 3D environments and lighting simulation. |
+| Phase 3 | Planned | Multiple display placement and video content support. |
+| Phase 4 | Planned | Team workspace, client reports, and billing. |
 
 ## Production Checks
 
@@ -79,7 +84,11 @@ pnpm build
 
 - Do not add Playwright browser smoke tests to this project.
 - Do not commit `.env`, `.env.local`, exported client simulations, or generated screenshots.
-- Keep API keys only in the deployment provider environment.
+- Keep AI provider keys in the deployment environment.
+
+## Author
+
+Built by [Sudarshan Chaudhari](https://github.com/SUDARSHANCHAUDHARI) for **SudarshanTechLabs**.
 
 ## License
 
