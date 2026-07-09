@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { chat } from '@/lib/ai'
+import { chat, type AIProvider } from '@/lib/ai'
 import type { ReviewResult } from '@/lib/types'
 
 const SYSTEM_PROMPT = `You are a digital signage design expert. Analyze this display placement and return JSON with exactly these keys:
@@ -27,11 +27,11 @@ function defaultResult(): ReviewResult {
     score: 72,
     readabilityRating: 'Good',
     issues: [
-      'No AI key configured — showing sample review.',
+      'No API key set — showing sample review.',
       'Text legibility cannot be verified without content image analysis.',
     ],
     recommendations: [
-      'Add an ANTHROPIC_API_KEY or OPENAI_API_KEY to enable live AI review.',
+      'Add your own API key in Settings to enable live AI review.',
       'Ensure minimum font size of 2cm per metre of viewing distance.',
       'Maintain 4.5:1 contrast ratio for accessible readability.',
     ],
@@ -65,10 +65,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: `contentDescription must be ${MAX_CONTENT_DESCRIPTION_CHARS} characters or fewer` }, { status: 413 })
   }
 
-  const hasKey =
-    process.env.ANTHROPIC_API_KEY || process.env.OPENAI_API_KEY
+  // Bring-your-own-key: supplied by the user per request, never stored server-side.
+  const apiKey = req.headers.get('x-api-key') ?? ''
+  const provider: AIProvider = req.headers.get('x-ai-provider') === 'openai' ? 'openai' : 'claude'
 
-  if (!hasKey) {
+  if (!apiKey) {
     return NextResponse.json(defaultResult())
   }
 
@@ -84,7 +85,7 @@ Please evaluate readability, sizing appropriateness for the viewing distance, an
 Return JSON only.`
 
   try {
-    const raw = await chat(SYSTEM_PROMPT, userMessage)
+    const raw = await chat(SYSTEM_PROMPT, userMessage, { provider, apiKey })
     const cleaned = raw.replace(/```json|```/g, '').trim()
     const result = JSON.parse(cleaned) as ReviewResult
     return NextResponse.json(result)

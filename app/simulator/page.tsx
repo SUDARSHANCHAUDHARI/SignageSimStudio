@@ -4,6 +4,8 @@ import { useCallback, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ROOM_TEMPLATES } from '@/lib/templates'
 import type { DisplayConfig, ReviewResult, RoomTemplate } from '@/lib/types'
+import ApiKeySettings from '@/components/ApiKeySettings'
+import { getAiHeaders } from '@/lib/apiKey'
 
 const PRESETS: { label: string; widthPct: number }[] = [
   { label: '32"', widthPct: 22 },
@@ -146,7 +148,7 @@ export default function SimulatorPage() {
     try {
       const res = await fetch('/api/review', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAiHeaders() },
         body: JSON.stringify({
           templateId: template.id,
           displayWidthPct: config.widthPct,
@@ -200,9 +202,12 @@ export default function SimulatorPage() {
           />
           {template.name}
         </div>
-        <Link href="/templates" className="text-xs text-gray-500 hover:text-white transition-colors">
-          Templates
-        </Link>
+        <div className="flex items-center gap-2">
+          <ApiKeySettings />
+          <Link href="/templates" className="text-xs text-gray-500 hover:text-white transition-colors">
+            Templates
+          </Link>
+        </div>
       </header>
 
       {/* Main layout */}
