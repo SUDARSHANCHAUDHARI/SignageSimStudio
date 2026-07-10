@@ -1,6 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { chat, type AIProvider } from '@/lib/ai'
-import type { ReviewResult } from '@/lib/types'
+// Cloudflare Pages Function — serves POST /api/review.
+// Ported from the former Next.js route handler (app/api/review/route.ts) so the
+// app can be a static export + Functions on Cloudflare Pages.
+import { chat, type AIProvider } from '../../lib/ai'
+import type { ReviewResult } from '../../lib/types'
 
 const SYSTEM_PROMPT = `You are a digital signage design expert. Analyze this display placement and return JSON with exactly these keys:
 - score: number 0-100
@@ -22,6 +24,13 @@ interface ReviewRequest {
 const MAX_CONTENT_DESCRIPTION_CHARS = 2_000
 const ALLOWED_ORIENTATIONS = new Set(['landscape', 'portrait'])
 
+function json(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { 'content-type': 'application/json' },
+  })
+}
+
 function defaultResult(): ReviewResult {
   return {
     score: 72,
@@ -40,29 +49,31 @@ function defaultResult(): ReviewResult {
   }
 }
 
-export async function POST(req: NextRequest): Promise<NextResponse> {
+export const onRequestPost = async (context: { request: Request }): Promise<Response> => {
+  const req = context.request
+
   let body: ReviewRequest
   try {
     body = (await req.json()) as ReviewRequest
   } catch {
-    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+    return json({ error: 'Invalid JSON body' }, 400)
   }
 
   const { templateId, displayWidthPct, viewingDistanceM, orientation, contentDescription } = body
   if (!templateId || typeof templateId !== 'string') {
-    return NextResponse.json({ error: 'templateId is required' }, { status: 400 })
+    return json({ error: 'templateId is required' }, 400)
   }
   if (!ALLOWED_ORIENTATIONS.has(orientation)) {
-    return NextResponse.json({ error: 'orientation must be landscape or portrait' }, { status: 400 })
+    return json({ error: 'orientation must be landscape or portrait' }, 400)
   }
   if (typeof displayWidthPct !== 'number' || displayWidthPct < 5 || displayWidthPct > 95) {
-    return NextResponse.json({ error: 'displayWidthPct must be between 5 and 95' }, { status: 400 })
+    return json({ error: 'displayWidthPct must be between 5 and 95' }, 400)
   }
   if (typeof viewingDistanceM !== 'number' || viewingDistanceM < 1 || viewingDistanceM > 20) {
-    return NextResponse.json({ error: 'viewingDistanceM must be between 1 and 20' }, { status: 400 })
+    return json({ error: 'viewingDistanceM must be between 1 and 20' }, 400)
   }
   if (contentDescription && contentDescription.length > MAX_CONTENT_DESCRIPTION_CHARS) {
-    return NextResponse.json({ error: `contentDescription must be ${MAX_CONTENT_DESCRIPTION_CHARS} characters or fewer` }, { status: 413 })
+    return json({ error: `contentDescription must be ${MAX_CONTENT_DESCRIPTION_CHARS} characters or fewer` }, 413)
   }
 
   // Bring-your-own-key: supplied by the user per request, never stored server-side.
@@ -70,7 +81,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const provider: AIProvider = req.headers.get('x-ai-provider') === 'openai' ? 'openai' : 'claude'
 
   if (!apiKey) {
-    return NextResponse.json(defaultResult())
+    return json(defaultResult())
   }
 
   const userMessage = `
@@ -88,9 +99,9 @@ Return JSON only.`
     const raw = await chat(SYSTEM_PROMPT, userMessage, { provider, apiKey })
     const cleaned = raw.replace(/```json|```/g, '').trim()
     const result = JSON.parse(cleaned) as ReviewResult
-    return NextResponse.json(result)
+    return json(result)
   } catch (err) {
     console.error('AI review error:', err)
-    return NextResponse.json(defaultResult())
+    return json(defaultResult())
   }
 }
