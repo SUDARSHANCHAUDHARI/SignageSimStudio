@@ -48,21 +48,26 @@ SignageSimStudio helps teams preview how signage content will look in real-world
 
 ```bash
 pnpm install
-cp .env.example .env.local
 pnpm dev
 ```
 
-Open `http://localhost:3000`.
+Open `http://localhost:3000`. No `.env` is required — see Configuration below.
 
-## Environment Variables
+## Configuration
 
-```env
-AI_PROVIDER=claude
-ANTHROPIC_API_KEY=your_key_here
-OPENAI_API_KEY=your_key_here
-```
+**AI is bring-your-own-key.** There is no server-side API key. Each visitor adds
+their own Anthropic or OpenAI key in the app's Settings; it is stored only in
+their browser and sent per request (`x-api-key` header), so hosting the app
+publicly can never bill your account. Without a key the app returns a sample
+review; add a key for live AI analysis.
 
-The app works without an AI key by returning a sample review. Add a provider key for live AI analysis.
+## Deployment
+
+Deployed on **Cloudflare Pages** as a static export + Pages Functions:
+
+- Build command `npx next build`, output directory `out`.
+- Compatibility flag `nodejs_compat` (for the AI SDKs).
+- Live at `signagesimstudio.sudarshantechlabs.com`.
 
 ## Roadmap
 
@@ -83,8 +88,7 @@ pnpm build
 ## Release Notes
 
 - Do not add Playwright browser smoke tests to this project.
-- Do not commit `.env`, `.env.local`, exported client simulations, or generated screenshots.
-- Keep AI provider keys in the deployment environment.
+- No API keys live in the repo or the server — the AI key is supplied per-user in the browser.
 
 ## Author
 
