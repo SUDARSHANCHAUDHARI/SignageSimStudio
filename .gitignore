@@ -85,3 +85,5 @@ graphify-out/
 
 # Ensure env example IS tracked
 !.env.example
+
+repoguard-results/
